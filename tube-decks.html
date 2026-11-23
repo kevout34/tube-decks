@@ -7,134 +7,154 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700&family=Barlow:wght@400;600&display=swap" rel="stylesheet">
 <style>
-/* VOICE: club booth: confident, legible in low light, nothing cute
-   IDEA: a DJ controller laid flat: decks side by side, mixer strip between the hands
-   PICTURE: the decks themselves: video screens, beat lights, phase rail, pads
-   COLOUR and TYPE: aubergine-charcoal ground, coral deck A, sky deck B, gold C, violet D; Barlow Condensed numerals
-   LAYOUT: decks in a row, mixer and effects below, all stacking to one column on phones */
-:root{color-scheme:dark;--bg:#16141b;--panel:#211e28;--well:#2c2834;--line:#3b3646;--ink:#f1ecf4;--dim:#aaa3b4;--a:#f2735c;--b:#7fb8ff;--c:#e8c25a;--d:#b98cff;--acc:var(--a)}
+/* VOICE: a club booth: confident, legible in low light, nothing cute
+   IDEA: a two-deck DJ controller: jog wheels, pitch faders, a mixer strip between them
+   PICTURE: the controller itself: spinning platters, LCD readouts, fader caps, knobs
+   COLOUR and TYPE: charcoal hardware, coral deck A, sky deck B, gold effects; Barlow Condensed
+   LAYOUT: deck | mixer | deck, folding to decks over mixer, then one column on phones */
+:root{color-scheme:dark;--bg:#121116;--metal:#1f1d24;--panel:#26232c;--well:#312d38;--line:#3d3847;--ink:#f1ecf4;--dim:#a9a2b3;--a:#f2735c;--b:#7fb8ff;--fx:#e8c25a;--acc:var(--a)}
 *{box-sizing:border-box;min-width:0}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Barlow,system-ui,sans-serif;overflow-x:clip}
-h1,h2,.num,.tag{font-family:"Barlow Condensed",Barlow,sans-serif}
-.wrap{max-width:1400px;margin:auto;padding-inline:max(4vw,16px)}
-header{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:8px 32px;padding-block:28px 12px}
-h1{font-size:clamp(34px,5vw,50px);line-height:1.05;margin:0;font-weight:700;text-wrap:balance}
-header p{margin:0;color:var(--dim);max-width:62ch}
-h2{font-size:26px;line-height:1.1;margin:0 0 10px;font-weight:700}
-#warn{background:#4a2420;border:1px solid var(--a);border-radius:12px;padding:12px 16px;margin:8px 0 0}
-#warn code{background:#00000044;padding:1px 6px;border-radius:5px}
-main{display:grid;gap:16px;padding-block:12px 56px}
-.decks{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,430px),1fr));gap:16px}
-.deck,.box{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;display:grid;gap:12px;align-content:start}
+body{margin:0;background:radial-gradient(1200px 600px at 50% -10%,#2a2533,var(--bg));color:var(--ink);font:16px/1.5 Barlow,system-ui,sans-serif;overflow-x:clip;min-height:100vh}
+h1,h2,.num,.tag,.lab,summary{font-family:"Barlow Condensed",Barlow,sans-serif}
+.wrap{max-width:1440px;margin:auto;padding-inline:max(3vw,12px)}
+header{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 24px;padding-block:22px 10px}
+h1{font-size:clamp(32px,4.5vw,46px);line-height:1.05;margin:0;font-weight:700}
+header p{margin:0;color:var(--dim)}
+#warn{background:#4a2420;border:1px solid var(--a);border-radius:12px;padding:12px 16px;margin:0 0 12px}
+#warn code{background:#00000055;padding:1px 6px;border-radius:5px}
+.console{display:grid;gap:12px;grid-template-columns:minmax(0,1fr) 300px minmax(0,1fr);grid-template-areas:"a m b";align-items:stretch;background:linear-gradient(#24212a,#1a181e);border:1px solid var(--line);border-radius:24px;padding:12px;box-shadow:0 30px 70px #000a,inset 0 1px 0 #ffffff14}
+#A{grid-area:a}#M{grid-area:m}#B{grid-area:b}
+.deck,.mixer{background:var(--panel);border-radius:16px;padding:12px;display:grid;gap:10px;align-content:start;box-shadow:inset 0 1px 0 #ffffff0d,inset 0 -2px 0 #0004}
 .dhead{display:flex;gap:8px;align-items:center}
 .tag{flex:none;width:44px;height:44px;border-radius:10px;display:grid;place-items:center;background:var(--acc);color:#16141b;font-size:26px;font-weight:700}
 .dhead input{flex:1}
-.screen{position:relative;aspect-ratio:16/9;background:#0c0b10;border-radius:12px;overflow:hidden;box-shadow:0 0 0 2px color-mix(in srgb,var(--acc) 45%,transparent)}
+.screen{position:relative;aspect-ratio:16/9;background:#0b0a0e;border-radius:10px;overflow:hidden;border:1px solid #000}
 .screen iframe,.screen .yt{position:absolute;inset:0;width:100%;height:100%;border:0}
 .empty{position:absolute;inset:0;display:grid;place-items:center;color:var(--dim);text-align:center;padding:20px;margin:0}
 .loaded .empty{display:none}
-.readout{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-.readout div{background:var(--well);border-radius:10px;padding:6px 12px}
-.num{display:block;font-size:clamp(28px,3.4vw,38px);line-height:1.1;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
-small,.lab,.note{font-size:13px;color:var(--dim)}
-.beats{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
-.beats span{height:12px;border-radius:4px;background:var(--well);transition:background .06s}
-.beats span.lit{background:var(--acc)}
-.beats span.lit:first-child{box-shadow:0 0 12px var(--acc)}
-.rail{position:relative;height:22px;border-radius:7px;background:var(--well);overflow:hidden}
-.rail::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--dim);opacity:.5}
+.lcd{background:#0c0f12;border:1px solid #000;border-radius:10px;padding:8px 12px;display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:2px 10px;box-shadow:inset 0 2px 8px #000}
+.lcd small{display:block;font-size:13px;color:var(--dim);line-height:1.2}
+.num{display:block;font-size:clamp(28px,3vw,40px);line-height:1.05;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--acc)}
+.lcd .t{color:var(--ink)}
+.beats{grid-column:1/-1;display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:6px}
+.beats span{height:8px;border-radius:3px;background:#22262b}
+.beats span.lit{background:var(--acc);box-shadow:0 0 10px var(--acc)}
+.rail{grid-column:1/-1;position:relative;height:20px;border-radius:6px;background:#181c20;margin-top:4px;overflow:hidden}
+.rail::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;background:#ffffff30}
 .rail i{position:absolute;top:3px;bottom:3px;width:6px;margin-left:-3px;border-radius:3px;background:var(--acc);left:50%}
-.rail b{position:absolute;inset:0;display:grid;place-items:center;font-size:12px;font-weight:400;color:var(--dim)}
-.rail.off i{display:none}
-.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.row .lab{min-width:6.2em}
-.grow{flex:1 1 140px}
-.pads{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
-.cues{display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) auto;gap:6px}
-button{font:600 15px/1.1 Barlow,sans-serif;color:var(--ink);background:var(--well);border:1px solid var(--line);border-radius:10px;min-height:44px;padding:0 14px;cursor:pointer;touch-action:manipulation;white-space:nowrap}
-.pads button,.cues button{padding:0 4px}
-button:hover{border-color:var(--dim)}
-button.on{background:var(--acc);color:#16141b;border-color:transparent}
+.rail b{position:absolute;inset:0;display:grid;place-items:center;font:500 13px "Barlow Condensed";color:var(--dim)}
+.rail[hidden]{display:none}
+.bpmrow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.body{display:grid;grid-template-columns:70px minmax(0,1fr) 70px;gap:10px;align-items:center}
+.trans{display:grid;gap:14px;justify-items:center}
+.jog{position:relative;width:min(100%,280px);aspect-ratio:1;margin:auto;border-radius:50%;background:#0d0c10;box-shadow:0 0 0 6px #2f2b36,0 0 0 7px #000,0 10px 24px #000a;touch-action:none;cursor:grab}
+.jog:active{cursor:grabbing}
+.jog svg{position:absolute;inset:0;width:100%;height:100%}
+.hub{position:absolute;inset:39%;border-radius:50%;background:radial-gradient(circle at 40% 35%,#3a3641,#18161c);display:grid;place-items:center;font:700 22px "Barlow Condensed";color:var(--ink);box-shadow:0 2px 6px #000;pointer-events:none}
+.pitch{display:grid;justify-items:center;gap:6px}
+.vf{position:relative;width:56px;height:190px;background:repeating-linear-gradient(#0000 0 18px,#ffffff22 18px 19px) 6px 0/8px 100% no-repeat,repeating-linear-gradient(#0000 0 18px,#ffffff22 18px 19px) calc(100% - 6px) 0/8px 100% no-repeat}
+.vf::after{content:"";position:absolute;left:6px;right:6px;top:50%;height:2px;background:var(--acc);opacity:.6;pointer-events:none}
+.vf.vol::after{display:none}
+.vf input{position:absolute;width:190px;height:56px;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-90deg)}
+.lab{font-size:15px;font-weight:500;color:var(--dim);letter-spacing:.01em}
+.pads{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.pads button{min-height:54px;font:700 22px "Barlow Condensed";background:#1a181e;border:1px solid #000;box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--acc) 30%,transparent)}
+.pads button.on{background:var(--acc);color:#16141b;box-shadow:0 0 16px color-mix(in srgb,var(--acc) 60%,transparent)}
+button{font:600 15px/1.1 Barlow,sans-serif;color:var(--ink);background:linear-gradient(#3a3642,#2c2833);border:1px solid #000;border-radius:10px;min-height:44px;padding:0 14px;cursor:pointer;touch-action:manipulation;white-space:nowrap;box-shadow:inset 0 1px 0 #ffffff1a,0 2px 3px #0006}
+button:hover{filter:brightness(1.12)}
+button:active{transform:translateY(1px)}
+button.on{background:var(--acc);color:#16141b}
 button:disabled{opacity:.4;cursor:default}
-.cue.set{background:color-mix(in srgb,var(--acc) 32%,var(--well));border-color:var(--acc)}
-input[type=text],input[type=number],input[type=url],select{font:16px Barlow,sans-serif;background:#121017;color:var(--ink);border:1px solid var(--line);border-radius:10px;min-height:44px;padding:0 12px}
+.round{width:64px;height:64px;min-height:0;padding:0;border-radius:50%;font:700 17px "Barlow Condensed"}
+.play{border:2px solid var(--acc)}
+.play.on{background:var(--acc)}
+.sync{font-size:16px}
+.small{min-height:36px;padding:0 10px;font-size:14px}
+input[type=text],input[type=number],input[type=url]{font:16px Barlow,sans-serif;background:#0f0e12;color:var(--ink);border:1px solid #000;border-radius:10px;min-height:44px;padding:0 12px}
 input[type=number]{width:6.5em}
-input[type=range]{accent-color:var(--acc);height:44px;margin:0}
+input[type=range]{-webkit-appearance:none;appearance:none;background:transparent;height:44px;margin:0;cursor:pointer;width:100%}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:#08070a;box-shadow:inset 0 1px 2px #000,0 1px 0 #ffffff12}
+input[type=range]::-moz-range-track{height:6px;border-radius:3px;background:#08070a}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:42px;margin-top:-18px;border-radius:4px;border:1px solid #000;background:linear-gradient(90deg,#34313a,#8e8997 40%,var(--acc) 46% 54%,#8e8997 60%,#34313a);box-shadow:0 4px 8px #000a}
+input[type=range]::-moz-range-thumb{width:24px;height:42px;border-radius:4px;border:1px solid #000;background:linear-gradient(90deg,#34313a,#8e8997 40%,var(--acc) 46% 54%,#8e8997 60%,#34313a)}
 :focus-visible{outline:2px solid var(--acc);outline-offset:2px}
 .msg{min-height:1.4em;margin:0;font-size:14px;color:var(--acc)}
-.mixer{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:16px}
-.xfrow{display:flex;gap:10px;align-items:center}.xfrow input{flex:1}
-.xfrow b{font:700 22px "Barlow Condensed"}
-.check{display:flex;gap:10px;align-items:center;min-height:44px}
-.check input{width:22px;height:22px;accent-color:var(--a)}
-.fx{--acc:#e8c25a;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:12px}
-.fx section{background:var(--well);border-radius:12px;padding:10px 12px;display:grid;gap:6px;align-content:start}
-.fx section .row{gap:6px}
-.fx input[type=range]{width:100%}
-output{font:700 20px "Barlow Condensed";white-space:nowrap}
-.help ol{margin:0;padding-left:1.3em;display:grid;gap:6px;max-width:75ch}
-.help p{max-width:75ch;margin:12px 0 0;color:var(--dim)}
-@media(max-width:860px){.mixer{grid-template-columns:1fr}}
-@media(max-width:600px){.pads{grid-template-columns:repeat(4,minmax(0,1fr))}.readout{gap:6px}.readout div{padding:6px 8px}}
-@media(prefers-reduced-motion:reduce){.beats span{transition:none}.beats span.lit:first-child{box-shadow:none}}
+details.more{border-top:1px solid var(--line);padding-top:6px}
+summary{cursor:pointer;font-size:17px;color:var(--dim);min-height:36px;display:flex;align-items:center}
+.more .row{margin-top:8px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.cue.set{background:color-mix(in srgb,var(--acc) 40%,#2c2833);border-color:var(--acc)}
+.mixer{--acc:var(--fx);background:linear-gradient(#2b2832,#232028)}
+.mtop{display:flex;align-items:center;justify-content:space-between;gap:8px}
+h2{font-size:26px;line-height:1;margin:0;font-weight:700}
+.power.on{background:var(--fx);color:#16141b;box-shadow:0 0 18px #e8c25a66}
+.note{font-size:13px;color:var(--dim);margin:0;line-height:1.35}
+.fxrow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;justify-items:center;background:#1c1a20;border-radius:12px;padding:12px 6px}
+.kn{display:grid;justify-items:center;gap:4px;text-align:center}
+.knob{width:62px;height:62px;border-radius:50%;position:relative;cursor:ns-resize;touch-action:none;background:radial-gradient(circle at 38% 30%,#57525e,#25222a 68%);box-shadow:0 0 0 3px #15131a,0 0 0 4px #ffffff10,0 6px 10px #000a}
+.knob::before{content:"";position:absolute;inset:-9px;border-radius:50%;background:conic-gradient(from 225deg,var(--fx) var(--f,0deg),#ffffff14 0 270deg,#0000 0);-webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 3px),#000 0);mask:radial-gradient(farthest-side,#0000 calc(100% - 3px),#000 0)}
+.knob i{position:absolute;left:50%;top:5px;width:4px;height:18px;margin-left:-2px;border-radius:2px;background:var(--ink);transform-origin:50% 26px;transform:rotate(var(--a,0deg))}
+output{font:700 17px "Barlow Condensed";white-space:nowrap}
+.chans{display:grid;grid-template-columns:1fr 1fr;justify-items:center;background:#1c1a20;border-radius:12px;padding:10px}
+.ch{display:grid;justify-items:center;gap:4px}
+.ch .tag{width:36px;height:36px;font-size:20px}
+.vf.vol{height:170px}.vf.vol input{width:170px}
+.xfwrap{background:#1c1a20;border-radius:12px;padding:8px 12px 4px;text-align:center}
+.xf{display:flex;align-items:center;gap:10px}
+.xf b{font:700 20px "Barlow Condensed"}
+.xf b:first-child{color:var(--a)}.xf b:last-child{color:var(--b)}
+.help{margin:14px 0 40px;color:var(--dim)}
+.help summary{color:var(--ink);font-size:20px}
+.help ol{padding-left:1.3em;display:grid;gap:6px;max-width:78ch;margin:6px 0}
+.help p{max-width:78ch;margin:8px 0 0}
+@media(max-width:1120px){.console{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"a b" "m m"}
+ .mixer{grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}.mtop,#fxState{grid-column:1/-1}}
+@media(max-width:760px){.console{grid-template-columns:minmax(0,1fr);grid-template-areas:"a" "m" "b";padding:8px;border-radius:18px}}
+@media(max-width:420px){.body{grid-template-columns:64px minmax(0,1fr) 60px;gap:6px}.round{width:58px;height:58px}}
+@media(prefers-reduced-motion:reduce){.beats span.lit{box-shadow:none}}
 </style>
 </head>
 <body>
 <header class="wrap">
   <h1>Tube Decks</h1>
-  <p>Paste YouTube links, match their tempos, loop on the beat, and run the mix through echo, tune and filter.</p>
+  <p>Paste two YouTube links, find their BPM, sync, and mix.</p>
 </header>
-<div class="wrap"><p id="warn" hidden></p></div>
 
 <main class="wrap">
-  <section class="decks" id="decks" aria-label="Decks"></section>
-
-  <section class="mixer">
-    <div class="box">
-      <h2>Mixer</h2>
-      <label class="lab" for="xf">Crossfader</label>
-      <div class="xfrow"><b>A</b><input type="range" id="xf" min="0" max="1" step="0.01" value="0.5"><b>B</b></div>
-      <div class="row"><button id="xfa">Full A</button><button id="xfc">Centre</button><button id="xfb">Full B</button></div>
-      <label class="check"><input type="checkbox" id="snap" checked> Snap hot cues to the beat</label>
-      <div class="row"><button id="add">Add a deck</button><span class="note">Up to four decks. Decks C and D can sit on either side of the crossfader.</span></div>
-    </div>
-
-    <div class="box">
-      <h2>Effects</h2>
-      <p class="note" style="margin:0">YouTube won't let a page touch its sound directly. Instead, a small effects window captures this tab's audio, runs it through the effects below and plays the result. This needs Chrome or Edge on a computer. Effects apply to the whole mix.</p>
-      <div class="row"><button id="fxOpen">Open effects window</button><span id="fxState" class="note">Effects off.</span></div>
-      <div class="fx">
-        <section>
-          <div class="row"><button id="echo">Echo</button><span class="lab">beat-synced to the master deck</span></div>
-          <div class="row" id="divs"><button data-d="0.25">¼</button><button data-d="0.5" class="on">½</button><button data-d="0.75">¾</button><button data-d="1">1</button><button data-d="2">2</button></div>
-          <label class="lab" for="fb">Repeats <output id="fbo">40%</output></label>
-          <input type="range" id="fb" min="0" max="0.9" step="0.01" value="0.4">
-          <label class="lab" for="mix">Echo level <output id="mixo">50%</output></label>
-          <input type="range" id="mix" min="0" max="1" step="0.01" value="0.5">
-        </section>
-        <section>
-          <label class="lab" for="tune">Tune (key shift) <output id="tuneo">0 st</output></label>
-          <input type="range" id="tune" min="-12" max="12" step="1" value="0">
-          <div class="row"><button id="tdn">−1</button><button id="tup">+1</button><button id="t0">Reset</button></div>
-          <label class="lab" for="filt">Filter <output id="filto">off</output></label>
-          <input type="range" id="filt" min="-1" max="1" step="0.01" value="0">
-          <div class="row"><button id="f0">Filter off</button><span class="note">Left: low-pass. Right: high-pass.</span></div>
-        </section>
+  <p id="warn" hidden></p>
+  <div class="console">
+    <div id="A"></div>
+    <section class="mixer" id="M" aria-label="Mixer">
+      <div class="mtop"><h2>Mixer</h2><button id="power" class="power" aria-pressed="false">⏻ Audio engine</button></div>
+      <p id="fxState" class="note">Off. Switch it on to use Find BPM and the effects (Chrome or Edge on a computer).</p>
+      <div class="fxrow">
+        <div class="kn"><div class="knob" id="kEcho"><i></i></div><button id="echo" class="small">Echo</button><output id="kEchoO">50%</output></div>
+        <div class="kn"><div class="knob" id="kTune"><i></i></div><span class="lab">Tune</span><output id="kTuneO">0</output></div>
+        <div class="kn"><div class="knob" id="kFilt"><i></i></div><span class="lab">Filter</span><output id="kFiltO">off</output></div>
       </div>
-    </div>
-  </section>
+      <div class="chans">
+        <div class="ch" style="--acc:var(--a)"><span class="tag">A</span><div class="vf vol"><input type="range" id="volA" min="0" max="100" value="100" aria-label="Deck A volume"></div><span class="lab">Volume</span></div>
+        <div class="ch" style="--acc:var(--b)"><span class="tag">B</span><div class="vf vol"><input type="range" id="volB" min="0" max="100" value="100" aria-label="Deck B volume"></div><span class="lab">Volume</span></div>
+      </div>
+      <div class="xfwrap">
+        <div class="xf"><b>A</b><input type="range" id="xf" min="0" max="1" step="0.01" value="0.5" aria-label="Crossfader"><b>B</b></div>
+        <span class="lab">Crossfader</span>
+      </div>
+    </section>
+    <div id="B"></div>
+  </div>
 
-  <section class="box help">
-    <h2>How to mix</h2>
+  <details class="help">
+    <summary>How to mix</summary>
     <ol>
       <li>Paste a YouTube link into each deck and press Load.</li>
-      <li>Play a track and tap the Tap button on every beat, at least four times. That sets the BPM, and your last tap marks beat 1. You can also type the BPM in, then press Beat 1 on a downbeat.</li>
-      <li>Choose a Master deck. On the other deck press Sync. It matches the speed, lines the beats up and turns Lock on so they stay together. The rail under the beat lights shows the drift: centred means in time.</li>
-      <li>Loop pads lock to the beat grid. Press one to loop that many beats. Press another to change the length, or press the lit one or Exit to let the track run on.</li>
-      <li>Hot cues: tap an empty pad to save a point, tap it again to jump there on the next beat. Right-click or shift-click a pad to clear it.</li>
+      <li>Press Find BPM on each deck. The first time, it opens the audio engine window: choose this tab, switch on "Also share tab audio", then Share. The deck plays for about 8 seconds while it listens. No engine? Press Tap BPM in time with the beat instead, at least 4 times.</li>
+      <li>Press Sync on the deck you want to follow the other one. The drift bar shows whether they're in time. Press Sync again to stop following.</li>
+      <li>Repeat pads loop 1, 2, 4 or 8 beats, starting on the beat. Press the lit pad to let the track carry on.</li>
+      <li>Spin a jog wheel while the track plays to nudge it ahead or behind. When paused, spinning scrubs through the track.</li>
     </ol>
-    <p>Limits from YouTube: speed moves in 0.05× steps between 0.25× and 2×, so Lock keeps synced decks in time by switching between the two nearest steps. Loops jump back with a seek, so very short loops can stutter a little. Some uploads block playback on other sites. If that happens, try a different upload of the same track. Your BPM, beat 1 and cues are saved per video in this browser.</p>
-  </section>
+    <p>YouTube only changes speed in 5% steps, so a synced deck switches between the two closest steps to stay in time. Effects and Tune work on the whole mix. Some uploads can't be played on other sites. If one won't load, try another upload of the same song. BPM, beat position and hot cues are remembered for each video.</p>
+  </details>
 </main>
 
 <template id="deckT">
@@ -143,63 +163,59 @@ output{font:700 20px "Barlow Condensed";white-space:nowrap}
       <span class="tag">A</span>
       <input type="url" class="url" placeholder="Paste a YouTube link" aria-label="YouTube link">
       <button class="load">Load</button>
-      <button class="rm" aria-label="Remove deck">✕</button>
     </div>
     <div class="screen"><div class="yt"></div><p class="empty">Paste a YouTube link above to load a track.</p></div>
-    <div class="beats" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
-    <div class="rail off" title="Beat drift against the master deck"><b>drift vs master</b><i></i></div>
-    <div class="readout">
-      <div><span class="num bpmOut">—</span><small>BPM now</small></div>
-      <div><span class="num rateOut">1.00×</span><small>speed</small></div>
-      <div><span class="num timeOut">0:00</span><small>time</small></div>
+    <div class="lcd">
+      <div><span class="num bpmOut">---</span><small class="bpmLab">BPM, not found yet</small></div>
+      <div><span class="num t rateOut">0%</span><small>speed</small></div>
+      <div><span class="num t timeOut">0:00</span><small>time</small></div>
+      <div class="beats" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+      <div class="rail" hidden><b>in time</b><i></i></div>
     </div>
-    <div class="row">
-      <button class="play grow">Play</button>
-      <button class="mst">Master</button>
-      <button class="sync">Sync</button>
-      <button class="lockb" title="Keep beats aligned with the master">Lock</button>
+    <div class="bpmrow"><button class="find">Find BPM</button><button class="tap">Tap BPM</button></div>
+    <div class="body">
+      <div class="trans">
+        <button class="round sync" title="Match this deck to the other deck">Sync</button>
+        <button class="round play" aria-label="Play">▶</button>
+      </div>
+      <div class="jog" role="img" aria-label="Jog wheel: spin to nudge or scrub">
+        <svg viewBox="0 0 200 200" class="plat" aria-hidden="true">
+          <circle cx="100" cy="100" r="99" fill="#141217"/>
+          <g fill="none" stroke="#ffffff0f"><circle cx="100" cy="100" r="90"/><circle cx="100" cy="100" r="83"/><circle cx="100" cy="100" r="76"/><circle cx="100" cy="100" r="69"/><circle cx="100" cy="100" r="62"/><circle cx="100" cy="100" r="55"/></g>
+          <circle cx="100" cy="100" r="46" style="fill:var(--acc)" opacity=".85"/>
+          <rect x="97" y="4" width="6" height="34" rx="3" style="fill:var(--acc)"/>
+        </svg>
+        <span class="hub">A</span>
+      </div>
+      <div class="pitch">
+        <span class="lab">Speed</span>
+        <div class="vf"><input type="range" class="tempo" min="0.5" max="1.5" step="0.05" value="1" aria-label="Speed"></div>
+        <button class="small reset">Reset</button>
+      </div>
     </div>
-    <div class="row">
-      <span class="lab">Speed</span>
-      <input type="range" class="tempo grow" min="0.25" max="2" step="0.05" value="1" aria-label="Speed">
-      <button class="slow" aria-label="Slower">−</button><button class="fast" aria-label="Faster">+</button><button class="reset">1×</button>
-    </div>
-    <div class="row">
-      <span class="lab">Nudge</span>
-      <button class="nl grow">◀ Hold to slow</button><button class="nr grow">Hold to push ▶</button>
-    </div>
-    <div class="row">
-      <span class="lab">Track BPM</span>
-      <input type="number" class="bpm" min="40" max="250" step="0.1" placeholder="—" aria-label="Track BPM">
-      <button class="tap grow">Tap</button><button class="h2" aria-label="Halve BPM">½</button><button class="x2" aria-label="Double BPM">×2</button><button class="grid">Beat 1</button>
-    </div>
-    <div>
-      <span class="lab">Loop (beats)</span>
-      <div class="pads"><button class="lp" data-b="0.5">½</button><button class="lp" data-b="1">1</button><button class="lp" data-b="2">2</button><button class="lp" data-b="4">4</button><button class="lp" data-b="8">8</button><button class="lp" data-b="16">16</button><button class="exit">Exit</button></div>
-    </div>
-    <div>
-      <span class="lab">Hot cues</span>
-      <div class="cues"><button class="cue">1</button><button class="cue">2</button><button class="cue">3</button><button class="cue">4</button><button class="clr" aria-label="Clear all cues">Clear</button></div>
-    </div>
-    <div class="row">
-      <span class="lab">Volume</span>
-      <input type="range" class="vol grow" min="0" max="100" step="1" value="100" aria-label="Volume">
-      <select class="side" aria-label="Crossfader side"><option value="A">Side A</option><option value="B">Side B</option><option value="T">Thru</option></select>
-    </div>
+    <span class="lab">Repeat (beats)</span>
+    <div class="pads"><button class="lp" data-b="1">1</button><button class="lp" data-b="2">2</button><button class="lp" data-b="4">4</button><button class="lp" data-b="8">8</button></div>
     <p class="msg" role="status"></p>
+    <details class="more">
+      <summary>More controls</summary>
+      <div class="row"><span class="lab">BPM</span><input type="number" class="bpm" min="40" max="250" step="0.1" placeholder="type" aria-label="Track BPM"><button class="small h2">½</button><button class="small x2">×2</button><button class="small grid" title="Press on a downbeat">Mark beat 1</button></div>
+      <div class="row"><span class="lab">Hot cues</span><button class="small cue">1</button><button class="small cue">2</button><button class="small cue">3</button><button class="small cue">4</button><button class="small clr">Clear</button></div>
+      <p class="note" style="margin-top:6px">Tap an empty hot cue to save the spot, tap it again to jump there on the next beat. Right-click a cue to clear it.</p>
+    </details>
   </article>
 </template>
 
 <script>
 {
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
-const LET='ABCD', COL=['--a','--b','--c','--d'], decks=[], waiting=[];
-let master=0, xf=.5, ytReady=false;
+const decks=[], waiting=[];
+let xf=.5, ytReady=false, solo=null, fxWin=null, pendingFind=null;
 const store={get(k){try{return JSON.parse(localStorage.getItem('tubedecks:'+k))}catch(e){return null}},set(k,v){try{localStorage.setItem('tubedecks:'+k,JSON.stringify(v))}catch(e){}}};
-const frac=x=>x-Math.floor(x), wrap=x=>x-Math.round(x);
+const frac=x=>x-Math.floor(x), wrap=x=>x-Math.round(x), sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const stepR=r=>Math.min(2,Math.max(.25,Math.round(r*20)/20));
 const fmt=s=>{s=Math.max(0,Math.floor(s));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
 const empty4=()=>[null,null,null,null];
+const CAPTURE_LAG=.05;
 
 function parseId(s){
   s=(s||'').trim();
@@ -213,50 +229,58 @@ function parseId(s){
   }catch(e){return null}
 }
 
+/* Tempo from an onset envelope: autocorrelation + comb over 60–190 BPM, then best beat phase */
+function findTempo({lo,hi,fr}){
+  const prep=a=>{const n=a.length;let m=0;for(const x of a)m+=x;m=m/n||1e-9;const o=new Float32Array(n);let p=Math.log1p(10*a[0]/m);for(let i=1;i<n;i++){const v=Math.log1p(10*a[i]/m);o[i]=Math.max(0,v-p);p=v}return o};
+  const L=prep(lo),H=prep(hi),n=L.length,o=new Float32Array(n);
+  for(let i=0;i<n;i++)o[i]=L[i]+.6*H[i];
+  let mean=0;for(const x of o)mean+=x;mean/=n;
+  const z=o.map(x=>x-mean),maxLag=Math.min(n-2,Math.ceil(fr*4)),ac=new Float32Array(maxLag+2);
+  for(let l=1;l<=maxLag+1;l++){let s=0;for(let i=l;i<n;i++)s+=z[i]*z[i-l];ac[l]=s/(n-l)}
+  const acI=x=>{const a=Math.floor(x),f=x-a;return a+1>=ac.length?0:ac[a]*(1-f)+ac[a+1]*f};
+  const w=[1,.8,.6,.5];
+  const raw=b=>{const P=fr*60/b;let s=1.5*acI(P/2);for(let k=1;k<=4;k++){if(k*P>maxLag)break;s+=w[k-1]*acI(k*P)}return s};
+  let best=120,bs=-Infinity;
+  for(let b=60;b<=190;b+=.05){const s=raw(b)*Math.exp(-.5*(Math.log2(b/120)/1.1)**2);if(s>bs){bs=s;best=b}}
+  const tri=best*1.5;if(tri<=190&&raw(tri)>.9*raw(best))best=tri;
+  const P=fr*60/best;let ph=0,ps=-Infinity;
+  for(let f=0;f<P;f+=.25){let s=0;for(let x=f;x<n-1;x+=P){const a=Math.floor(x),q=x-a;s+=o[a]*(1-q)+o[a+1]*q}if(s>ps){ps=s;ph=f}}
+  return{bpm:best,phase:ph/fr};
+}
+
 class Deck{
   constructor(i){
-    Object.assign(this,{i,L:LET[i],p:null,ready:false,playing:false,rate:1,bpm:0,anchor:0,cues:empty4(),loop:null,lock:false,lockRate:null,mul:1,vol:100,side:i===1?'B':i===0?'A':'T',taps:[],vid:null,cool:0,tmr:null,nudging:false,after:null});
+    Object.assign(this,{i,L:'AB'[i],p:null,ready:false,playing:false,rate:1,bpm:0,anchor:0,cues:empty4(),loop:null,lock:false,lockRate:null,mul:1,vol:100,taps:[],vid:null,cool:0,tmr:null,nd:0,nudging:false,after:null,listening:false,jd:null});
     const el=this.el=$('#deckT').content.firstElementChild.cloneNode(true);
-    el.style.setProperty('--acc',`var(${COL[i]})`);
-    this.$('.tag').textContent=this.L;
-    this.$('.side').value=this.side;
-    this.r={time:this.$('.timeOut'),bpm:this.$('.bpmOut'),rate:this.$('.rateOut'),dots:$$('.beats span',el),rail:this.$('.rail'),needle:this.$('.rail i')};
+    el.style.setProperty('--acc',i?'var(--b)':'var(--a)');
+    this.$('.tag').textContent=this.L;this.$('.hub').textContent=this.L;
+    this.r={time:this.$('.timeOut'),bpm:this.$('.bpmOut'),bpmLab:this.$('.bpmLab'),rate:this.$('.rateOut'),dots:$$('.beats span',el),rail:this.$('.rail'),needle:this.$('.rail i'),railTxt:this.$('.rail b'),plat:this.$('.plat')};
     const on=(s,ev,f)=>this.$(s).addEventListener(ev,f);
-    const rm=this.$('.rm'); if(i<2)rm.remove(); else rm.onclick=()=>removeDeck(this);
     on('.load','click',()=>this.load());
     on('.url','keydown',e=>{if(e.key==='Enter')this.load()});
     on('.play','click',()=>{if(this.ok())this.playing?this.p.pauseVideo():this.p.playVideo()});
-    on('.mst','click',()=>setMaster(this.i));
     on('.sync','click',()=>this.sync());
-    on('.lockb','click',()=>{if(this.lock)return this.setLock(false);if(this.i===master)return this.say('The master deck sets the tempo, so it never locks.');this.sync()});
+    on('.find','click',()=>this.findBpm());
     on('.tempo','input',e=>{this.setLock(false);this.setRate(+e.target.value)});
-    on('.slow','click',()=>{this.setLock(false);this.setRate(this.rate-.05)});
-    on('.fast','click',()=>{this.setLock(false);this.setRate(this.rate+.05)});
     on('.reset','click',()=>{this.setLock(false);this.setRate(1)});
-    on('.bpm','change',e=>this.setBpm(+e.target.value));
     on('.tap','pointerdown',e=>{e.preventDefault();this.tap()});
     on('.tap','keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();this.tap()}});
+    on('.bpm','change',e=>this.setBpm(+e.target.value));
     on('.x2','click',()=>this.bpm&&this.setBpm(this.bpm*2));
     on('.h2','click',()=>this.bpm&&this.setBpm(this.bpm/2));
-    on('.grid','click',()=>{if(this.ok()){this.anchor=this.now();this.save();this.say('Beat 1 set here.')}});
+    on('.grid','click',()=>{if(this.ok()){this.anchor=this.now();this.save();this.say('Beat 1 marked here.')}});
     $$('.lp',el).forEach(b=>b.onclick=()=>this.setLoop(+b.dataset.b));
-    on('.exit','click',()=>this.exitLoop());
     $$('.cue',el).forEach((b,k)=>{b.onclick=e=>e.shiftKey?this.clearCue(k):this.cue(k);b.oncontextmenu=e=>{e.preventDefault();this.clearCue(k)}});
     on('.clr','click',()=>{this.cues=empty4();this.save();this.paint()});
-    on('.vol','input',e=>{this.vol=+e.target.value;mixVol()});
-    on('.side','change',e=>{this.side=e.target.value;mixVol()});
-    for(const [s,d] of [['.nl',-.05],['.nr',.05]]){
-      const b=this.$(s);
-      b.addEventListener('pointerdown',e=>{e.preventDefault();this.nudge(d)});
-      for(const ev of ['pointerup','pointerleave','pointercancel'])b.addEventListener(ev,()=>this.nudge(0));
-    }
-    const last=store.get('deck'+i); if(last&&last.url)this.$('.url').value=last.url;
+    this.jog();
+    const last=store.get('deck'+i);if(last&&last.url)this.$('.url').value=last.url;
     this.paint();
   }
   $(s){return this.el.querySelector(s)}
+  other(){return decks[1-this.i]}
   say(t){this.$('.msg').textContent=t||''}
   ok(){if(!this.ready){this.say('Load a track first.');return false}return true}
-  need(){if(!this.ok())return false;if(!this.bpm){this.say("Set this track's BPM first: tap along on the beat or type it in.");return false}return true}
+  need(){if(!this.ok())return false;if(!this.bpm){this.say("This track needs a BPM first. Press Find BPM, or Tap BPM along with the beat.");return false}return true}
   now(){try{return this.ready?(this.p.getCurrentTime()||0):0}catch(e){return 0}}
   speed(){try{return this.p.getPlaybackRate()||this.rate}catch(e){return this.rate}}
   bl(){return 60/this.bpm}
@@ -271,33 +295,33 @@ class Deck{
     this.vid=v.id;const s=store.get('v:'+v.id)||{};
     this.bpm=s.bpm||0;this.anchor=s.anchor||0;this.cues=s.cues||empty4();
     this.save();this.paint();
-    this.say(this.bpm?'Loaded with your saved BPM, beat 1 and cues.':'Loaded. Press Play, then tap along with the beat to set its BPM.');
+    this.say(this.bpm?'Loaded, with the BPM you found last time.':'Loaded. Next, press Find BPM.');
     const go=()=>{
       if(this.p){this.ready?this.p.cueVideoById({videoId:v.id,startSeconds:v.t}):(this.after=v);return}
       this.el.classList.add('loaded');
       this.p=new YT.Player(this.$('.yt'),{videoId:v.id,playerVars:{playsinline:1,rel:0,start:v.t,disablekb:1,origin:location.origin},events:{
         onReady:()=>{this.ready=true;this.setRate(this.rate);mixVol();if(this.after){this.p.cueVideoById({videoId:this.after.id,startSeconds:this.after.t});this.after=null}},
         onStateChange:e=>{this.playing=e.data===1;this.paint()},
-        onPlaybackRateChange:()=>this.paintRate(),
-        onError:e=>this.say([101,150].includes(e.data)?'The uploader blocks this video from playing on other sites. Try a different upload of the same track.':[2,5,100].includes(e.data)?"YouTube couldn't find or play that video.":`YouTube couldn't play that video (error ${e.data}). If you opened this file straight from your computer, host it instead (see the note at the top).`)
+        onError:e=>this.say([101,150].includes(e.data)?"The uploader doesn't allow this video on other sites. Try another upload of the same song.":[2,5,100].includes(e.data)?"YouTube couldn't find or play that video.":`YouTube couldn't play that video (error ${e.data}). If you opened this file straight from your computer, host it instead.`)
       }});
     };
     ytReady?go():waiting.push(go);
   }
 
   setRate(r){
-    this.rate=stepR(r);this.lockRate=null;
+    this.rate=Math.min(1.5,Math.max(.5,stepR(r)));this.lockRate=null;
     if(this.ready&&!this.lock)this.p.setPlaybackRate(this.rate);
     this.paintRate();
   }
   paintRate(){
-    this.$('.tempo').value=this.rate;this.r.rate.textContent=this.rate.toFixed(2)+'×';
-    if(this.ready&&!this.lock&&!this.nudging){const a=this.speed();if(Math.abs(a-this.rate)>.001)this.say(`YouTube is playing this at ${a}×, not ${this.rate}×. Some videos only allow preset speeds.`)}
+    this.$('.tempo').value=this.rate;
+    const pc=Math.round((this.rate-1)*100);
+    this.r.rate.textContent=(pc>0?'+':'')+pc+'%';
   }
   setBpm(b){
     b=Math.round(b*10)/10;
-    if(!(b>=40&&b<=250)){this.say('BPM should be between 40 and 250.');this.$('.bpm').value=this.bpm||'';return}
-    this.bpm=b;this.$('.bpm').value=b;this.save();
+    if(!(b>=40&&b<=250)){this.say('BPM should be between 40 and 250.');this.$('.bpm').value=this.bpm||'';return false}
+    this.bpm=b;this.$('.bpm').value=b;this.save();return true;
   }
   tap(){
     const t=performance.now();
@@ -306,8 +330,32 @@ class Deck{
     const n=this.taps.length;
     if(n>=4)this.setBpm(60000*(n-1)/(this.taps.at(-1)-this.taps[0])/(this.ready?this.speed():1));
     if(this.ready)this.anchor=this.now();
-    this.say(n<4?`Keep tapping on the beat… ${n}`:`About ${this.bpm} BPM. Your last tap marked beat 1.`);
+    this.say(n<4?`Keep tapping on the beat… ${n} of 4`:`About ${this.bpm} BPM. Keep tapping to fine-tune it.`);
     this.save();
+  }
+  async findBpm(){
+    if(!this.ok()||this.listening)return;
+    if(!engineLive()){
+      pendingFind=this;
+      if(!openEngine())return this.say('Your browser blocked the engine window. Allow pop-ups for this page, or use Tap BPM.');
+      return this.say('In the window that opened, press the button, choose this tab and switch on "Also share tab audio". Find BPM starts right after.');
+    }
+    this.listening=true;this.setLock(false);this.exitLoop();
+    const btn=this.$('.find');btn.disabled=true;
+    solo=this;mixVol();
+    if(!this.playing){this.p.playVideo();await sleep(900)}
+    const sp=this.speed(),t0=this.now();
+    let n=8;btn.textContent='Listening… '+n;
+    const cd=setInterval(()=>{btn.textContent='Listening… '+Math.max(1,--n)},1000);
+    this.say(`Listening to deck ${this.L}. Deck ${this.other().L} is muted for a moment.`);
+    let res=null;
+    try{res=await Promise.race([fxWin.FX.listen(8),sleep(11000).then(()=>null)])}catch(e){res=null}
+    clearInterval(cd);btn.textContent='Find BPM';btn.disabled=false;this.listening=false;solo=null;mixVol();
+    if(!res||res.lo.length<res.fr*4)return this.say("Couldn't hear the track. Make sure the audio engine is on and the deck isn't silent, then try again.");
+    const {bpm,phase}=findTempo(res);
+    if(!this.setBpm(bpm/sp))return;
+    this.anchor=t0+(phase-CAPTURE_LAG)*sp;this.save();
+    this.say(`Found ${this.bpm} BPM. If it feels twice or half as fast, open More controls and press ½ or ×2.`);
   }
   setLoop(b){
     if(!this.need())return;
@@ -325,38 +373,47 @@ class Deck{
     if(!this.ok())return;
     if(this.cues[k]==null){
       let t=this.now();
-      if(this.bpm&&$('#snap').checked)t=this.anchor+Math.round((t-this.anchor)/this.bl())*this.bl();
-      this.cues[k]=Math.max(0,t);this.save();this.paint();this.say(`Cue ${k+1} saved at ${fmt(this.cues[k])}.`);
+      if(this.bpm)t=this.anchor+Math.round((t-this.anchor)/this.bl())*this.bl();
+      this.cues[k]=Math.max(0,t);this.save();this.paint();this.say(`Hot cue ${k+1} saved at ${fmt(this.cues[k])}.`);
       return;
     }
     this.exitLoop();
     const to=this.cues[k];
-    if(this.playing&&this.bpm&&$('#snap').checked){
-      const wait=(1-frac(this.beats()))*this.bl()/this.speed();
-      setTimeout(()=>this.seek(to),Math.max(0,wait*1000-30));
-    }else{this.seek(to);if(!this.playing)this.p.playVideo()}
+    if(this.playing&&this.bpm){const wait=(1-frac(this.beats()))*this.bl()/this.speed();setTimeout(()=>this.seek(to),Math.max(0,wait*1000-30))}
+    else{this.seek(to);this.p.playVideo()}
   }
   clearCue(k){this.cues[k]=null;this.save();this.paint()}
   nudge(d){
-    if(!this.ready||(d===0&&!this.nudging))return;
-    this.nudging=d!==0;
+    if(!this.ready||d===this.nd)return;
+    this.nd=d;this.nudging=d!==0;
     const base=this.lock&&this.lockRate?this.lockRate:this.rate;
     this.p.setPlaybackRate(stepR(base+d));
   }
-  sync(){
-    const m=decks[master];
-    if(m===this)return this.say('This is the master deck. Press Sync on the other deck.');
-    if(!m||!m.ready||!m.bpm)return this.say(`Load deck ${m?m.L:'A'} and give it a BPM first.`);
-    if(!this.need())return;
-    const tgt=m.eff();let r=tgt/this.bpm;
-    if(r>1.6)r/=2;else if(r<.62)r*=2;
-    r=Math.min(2,Math.max(.25,r));
-    this.mul=this.bpm*r/tgt;
-    this.setLock(false);this.setRate(r);this.align();this.setLock(true);
-    const exact=Math.abs(stepR(r)-r)<.002;
-    this.say(`Synced to deck ${m.L} at ${(tgt*this.mul).toFixed(1)} BPM.`+(exact?'':` The exact speed is ${r.toFixed(3)}×, so Lock switches between the nearest 0.05× steps to stay in time.`));
+  jog(){
+    const j=this.$('.jog');
+    const ang=e=>{const r=j.getBoundingClientRect();return Math.atan2(e.clientY-r.top-r.height/2,e.clientX-r.left-r.width/2)*180/Math.PI};
+    j.addEventListener('pointerdown',e=>{if(!this.ready)return;j.setPointerCapture(e.pointerId);this.jd={a:ang(e),acc:0,last:0}});
+    j.addEventListener('pointermove',e=>{
+      if(!this.jd)return;const a=ang(e);let d=((a-this.jd.a+540)%360)-180;this.jd.a=a;
+      if(this.playing){if(Math.abs(d)>.4)this.nudge(d>0?.05:-.05)}
+      else{this.jd.acc+=d;const t=performance.now();if(t-this.jd.last>70&&this.jd.acc){this.p.seekTo(Math.max(0,this.now()+this.jd.acc/360*1.8),true);this.jd.acc=0;this.jd.last=t}}
+    });
+    const end=()=>{if(this.jd){this.jd=null;this.nudge(0)}};
+    j.addEventListener('pointerup',end);j.addEventListener('pointercancel',end);
   }
-  err(){const m=decks[master];return wrap(frac(this.beats())-frac(m.beats()*this.mul))}
+  sync(){
+    if(this.lock){this.setLock(false);return this.say('Sync off. This deck plays at its own speed again.')}
+    const m=this.other();
+    if(!m.ready||!m.bpm)return this.say(`Deck ${m.L} needs a BPM first. Press Find BPM on deck ${m.L}.`);
+    if(!this.need())return;
+    if(m.lock)m.setLock(false);
+    const tgt=m.eff();let r=tgt/this.bpm;
+    if(r>1.41)r/=2;else if(r<.71)r*=2;
+    this.mul=this.bpm*r/tgt;
+    this.setRate(r);this.align();this.setLock(true);
+    this.say(`Following deck ${m.L} at ${(tgt*this.mul).toFixed(1)} BPM.`);
+  }
+  err(){return wrap(frac(this.beats())-frac(this.other().beats()*this.mul))}
   align(){this.seek(this.now()-this.err()*this.bl())}
   setLock(v){
     this.lock=v;this.lockRate=null;
@@ -365,8 +422,8 @@ class Deck{
   }
   pll(){
     if(!this.lock||!this.ready||!this.playing||this.nudging||performance.now()<this.cool)return;
-    const m=decks[master];
-    if(!m||m===this||!m.ready||!m.playing||!m.bpm||!this.bpm)return;
+    const m=this.other();
+    if(!m.ready||!m.playing||!m.bpm||!this.bpm)return;
     const tgt=m.eff()*this.mul/this.bpm;
     const lo=Math.max(.25,Math.floor(tgt*20+1e-6)/20),hi=Math.min(2,lo+.05);
     const e=this.err();
@@ -377,15 +434,16 @@ class Deck{
   }
   tick(){
     if(!this.ready)return;
-    const t=this.now(),m=decks[master],r=this.r;
+    const t=this.now(),m=this.other(),r=this.r;
     r.time.textContent=fmt(t);
-    const shown=!this.bpm?0:(this.lock&&m&&m!==this&&m.bpm)?m.eff()*this.mul:this.bpm*this.rate;
-    r.bpm.textContent=shown?shown.toFixed(1):'—';
+    r.plat.style.transform=`rotate(${(t*200)%360}deg)`;
+    const shown=!this.bpm?0:(this.lock&&m.bpm)?m.eff()*this.mul:this.bpm*this.rate;
+    r.bpm.textContent=shown?shown.toFixed(1):'---';
+    r.bpmLab.textContent=this.bpm?(this.lock?`BPM, synced to ${m.L}`:'BPM'):'BPM, not found yet';
     const bi=this.bpm?((Math.floor(this.beats())%4)+4)%4:-1;
     r.dots.forEach((s,k)=>s.classList.toggle('lit',k===bi&&this.playing));
-    const cmp=m&&m!==this&&m.ready&&m.bpm&&this.bpm;
-    r.rail.classList.toggle('off',!cmp);
-    if(cmp)r.needle.style.left=(50+this.err()*90)+'%';
+    r.rail.hidden=!this.lock;
+    if(this.lock){const e=this.err();r.needle.style.left=(50+e*90)+'%';r.railTxt.textContent=Math.abs(e)<.05?'in time':e>0?'a little ahead':'a little behind'}
     if(this.loop&&this.playing&&!this.tmr&&performance.now()>this.cool){
       const rem=(this.loop.e-t)/this.speed();
       if(t>this.loop.e+.08||t<this.loop.s-1)this.seek(this.loop.s);
@@ -393,13 +451,11 @@ class Deck{
     }
   }
   paint(){
-    const pl=this.$('.play');pl.textContent=this.playing?'Pause':'Play';pl.classList.toggle('on',this.playing);
-    this.$('.mst').classList.toggle('on',master===this.i);
-    this.$('.sync').disabled=master===this.i;
-    this.$('.lockb').classList.toggle('on',this.lock);
+    const pl=this.$('.play');pl.textContent=this.playing?'❚❚':'▶';pl.setAttribute('aria-label',this.playing?'Pause':'Play');pl.classList.toggle('on',this.playing);
+    this.$('.sync').classList.toggle('on',this.lock);
     this.$('.bpm').value=this.bpm||'';
     $$('.lp',this.el).forEach(b=>b.classList.toggle('on',!!this.loop&&this.loop.b===+b.dataset.b));
-    $$('.cue',this.el).forEach((b,k)=>{const c=this.cues[k];b.classList.toggle('set',c!=null);b.title=c==null?'Empty: tap to save this point':`Jump to ${fmt(c)}. Right-click or shift-click to clear.`});
+    $$('.cue',this.el).forEach((b,k)=>{const c=this.cues[k];b.classList.toggle('set',c!=null);b.title=c==null?'Empty: tap to save this spot':`Jump to ${fmt(c)}. Right-click to clear.`});
     this.paintRate();
   }
 }
@@ -407,38 +463,47 @@ class Deck{
 function mixVol(){
   for(const d of decks){
     if(!d.ready)continue;
-    const g=d.side==='A'?Math.min(1,2*(1-xf)):d.side==='B'?Math.min(1,2*xf):1;
-    d.p.setVolume(Math.round(d.vol*g));
+    let v;
+    if(solo)v=d===solo?Math.max(d.vol,60):0;
+    else v=d.vol*(d.i===0?Math.min(1,2*(1-xf)):Math.min(1,2*xf));
+    d.p.setVolume(Math.round(v));
   }
 }
-function setMaster(i){master=i;store.set('master',i);decks.forEach(d=>{if(d.i===i&&d.lock)d.setLock(false);d.paint()})}
-function addDeck(){
-  if(decks.length>=4)return;
-  const d=new Deck(decks.length);decks.push(d);$('#decks').append(d.el);
-  $('#add').disabled=decks.length>=4;store.set('n',decks.length);
-}
-function removeDeck(d){
-  if(d!==decks.at(-1))return d.say(`Remove deck ${decks.at(-1).L} first.`);
-  try{d.p&&d.p.destroy()}catch(e){}
-  clearTimeout(d.tmr);d.el.remove();decks.pop();
-  if(master===d.i)setMaster(0);
-  $('#add').disabled=false;store.set('n',decks.length);
+
+/* ---------- mixer ---------- */
+$('#xf').addEventListener('input',e=>{xf=+e.target.value;mixVol()});
+$('#xf').addEventListener('dblclick',e=>{xf=.5;e.target.value=.5;mixVol()});
+['volA','volB'].forEach((id,k)=>$('#'+id).addEventListener('input',e=>{decks[k].vol=+e.target.value;mixVol()}));
+
+function knob(el,{min,max,step,value,def,show,onChange}){
+  const out=$('#'+el.id+'O');let v=value;
+  el.tabIndex=0;el.setAttribute('role','slider');el.setAttribute('aria-valuemin',min);el.setAttribute('aria-valuemax',max);
+  const set=x=>{v=Math.min(max,Math.max(min,Math.round(x/step)*step));const f=(v-min)/(max-min);
+    el.style.setProperty('--a',(f*270-135)+'deg');el.style.setProperty('--f',(f*270)+'deg');
+    el.setAttribute('aria-valuenow',v);el.setAttribute('aria-valuetext',show(v));out.textContent=show(v);onChange(v)};
+  let y0=0,v0=0;
+  el.addEventListener('pointerdown',e=>{el.setPointerCapture(e.pointerId);y0=e.clientY;v0=v;el.focus()});
+  el.addEventListener('pointermove',e=>{if(el.hasPointerCapture(e.pointerId))set(v0+(y0-e.clientY)/160*(max-min))});
+  el.addEventListener('dblclick',()=>set(def));
+  el.addEventListener('keydown',e=>{const k={ArrowUp:1,ArrowRight:1,ArrowDown:-1,ArrowLeft:-1}[e.key];if(k){e.preventDefault();set(v+k*Math.max(step,(max-min)/40))}});
+  set(value);return set;
 }
 
-/* ---------- mixer controls ---------- */
-const xfIn=$('#xf');
-const setXf=v=>{xf=v;xfIn.value=v;mixVol()};
-xfIn.addEventListener('input',e=>setXf(+e.target.value));
-$('#xfa').onclick=()=>setXf(0);$('#xfc').onclick=()=>setXf(.5);$('#xfb').onclick=()=>setXf(1);
-$('#add').onclick=addDeck;
-
-/* ---------- effects (run in a popup that captures this tab) ---------- */
-const fxp={echo:false,div:.5,fb:.4,mix:.5,tune:0,filt:0};
-let fxWin=null;
-window.fxParams=()=>{const m=decks[master];const bpm=m&&m.bpm?m.eff():120;return{...fxp,dt:Math.min(3.9,fxp.div*60/bpm)}};
-window.fxStatus=(t,live)=>{$('#fxState').textContent=t;$('#fxOpen').classList.toggle('on',!!live)};
+/* ---------- audio engine (popup that captures this tab: Find BPM + effects) ---------- */
+const fxp={echo:false,mix:.5,tune:0,filt:0};
+window.fxParams=()=>{const d=decks.find(x=>x.playing&&x.bpm)||decks.find(x=>x.bpm);const bpm=d?d.eff():120;return{...fxp,fb:.45,dt:Math.min(3.9,.5*60/bpm)}};
 const pushFx=()=>{try{if(fxWin&&!fxWin.closed&&fxWin.FX)fxWin.FX.set(fxParams())}catch(e){}};
 setInterval(pushFx,300);
+const engineLive=()=>{try{return!!(fxWin&&!fxWin.closed&&fxWin.FX&&fxWin.FX.live())}catch(e){return false}};
+window.fxStatus=(t,live)=>{
+  $('#fxState').textContent=t;const p=$('#power');p.classList.toggle('on',!!live);p.setAttribute('aria-pressed',!!live);
+  if(live&&pendingFind){const d=pendingFind;pendingFind=null;setTimeout(()=>d.findBpm(),300)}
+  if(!live)pendingFind=null;
+};
+knob($('#kEcho'),{min:0,max:1,step:.01,value:.5,def:.5,show:v=>Math.round(v*100)+'%',onChange:v=>{fxp.mix=v;pushFx()}});
+knob($('#kTune'),{min:-12,max:12,step:1,value:0,def:0,show:v=>v===0?'0':(v>0?'+':'−')+Math.abs(v)+' st',onChange:v=>{fxp.tune=v;pushFx()}});
+knob($('#kFilt'),{min:-1,max:1,step:.02,value:0,def:0,show:v=>Math.abs(v)<.03?'off':v<0?'low '+Math.round(-v*100):'high '+Math.round(v*100),onChange:v=>{fxp.filt=Math.abs(v)<.03?0:v;pushFx()}});
+$('#echo').onclick=e=>{fxp.echo=!fxp.echo;e.currentTarget.classList.toggle('on',fxp.echo);pushFx();if(fxp.echo&&!engineLive())fxStatus('Echo is set, but you need to switch on the audio engine to hear it.',false)};
 
 const WORKLET=`class P extends AudioWorkletProcessor{
 static get parameterDescriptors(){return[{name:'ratio',defaultValue:1,minValue:.25,maxValue:4}]}
@@ -454,82 +519,91 @@ for(let k=0;k<n;k++){
   o[c][k]=s}
  this.w=(this.w+1)%N}
 return true}}
-registerProcessor('pshift',P)`;
+registerProcessor('pshift',P);
+class M extends AudioWorkletProcessor{
+constructor(){super();this.on=false;this.lo=[];this.hi=[];this.y=0;this.xp=0;this.a=1-Math.exp(-2*Math.PI*150/sampleRate);
+this.port.onmessage=e=>{if(e.data==='start'){this.lo=[];this.hi=[];this.on=true}else{this.on=false;this.port.postMessage({lo:Float32Array.from(this.lo),hi:Float32Array.from(this.hi)})}}}
+process(I){const i=I[0];if(this.on&&i&&i.length){const L=i[0],R=i[1]||i[0];let el=0,eh=0;
+for(let k=0;k<L.length;k++){const x=(L[k]+R[k])*.5;this.y+=this.a*(x-this.y);el+=this.y*this.y;const d=x-this.xp;this.xp=x;eh+=d*d}
+this.lo.push(el);this.hi.push(eh)}return true}}
+registerProcessor('meter',M)`;
 
 function popupMain(code){
   const st=document.getElementById('st'),btn=document.getElementById('go');
   const say=(t,live)=>{st.textContent=t;try{opener&&opener.fxStatus(t,live)}catch(e){}};
   let ctx=null,n=null,stream=null;
-  window.FX={set(p){
-    if(!n)return;const t=ctx.currentTime,s=(a,v,k=.03)=>a.setTargetAtTime(v,t,k);
-    if(n.ps)s(n.ps.parameters.get('ratio'),2**(p.tune/12),.02);
-    s(n.lp.frequency,p.filt<0?20000*0.01**(-p.filt):20000);
-    s(n.hp.frequency,p.filt>0?10*500**p.filt:10);
-    s(n.ein.gain,p.echo?1:0,.01);s(n.dl.delayTime,p.dt,.08);s(n.fb.gain,p.fb);s(n.wet.gain,p.mix);
-  }};
-  const stop=()=>{if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;if(ctx)ctx.close();ctx=null;n=null;btn.textContent='Capture the mixer tab';say('Effects off. Decks play normally.',false)};
+  window.FX={
+    live(){return!!n},
+    set(p){
+      if(!n)return;const t=ctx.currentTime,s=(a,v,k=.03)=>a.setTargetAtTime(v,t,k);
+      if(n.ps)s(n.ps.parameters.get('ratio'),2**(p.tune/12),.02);
+      s(n.lp.frequency,p.filt<0?20000*0.01**(-p.filt):20000);
+      s(n.hp.frequency,p.filt>0?10*500**p.filt:10);
+      s(n.ein.gain,p.echo?1:0,.01);s(n.dl.delayTime,p.dt,.08);s(n.fb.gain,p.fb);s(n.wet.gain,p.mix);
+    },
+    listen(sec){return new Promise(res=>{
+      if(!n||!n.meter)return res(null);
+      n.meter.port.onmessage=e=>res({lo:e.data.lo,hi:e.data.hi,fr:ctx.sampleRate/128});
+      n.meter.port.postMessage('start');
+      setTimeout(()=>{if(n)n.meter.port.postMessage('stop');else res(null)},sec*1000);
+    })}
+  };
+  const stop=()=>{if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;if(ctx)ctx.close();ctx=null;n=null;btn.textContent='Switch on: capture the mixer tab';say('Off. Switch it on to use Find BPM and the effects.',false)};
   btn.onclick=async()=>{
     if(stream)return stop();
-    if(!navigator.mediaDevices||!navigator.mediaDevices.getDisplayMedia)return say("This browser can't capture tab audio. Use Chrome or Edge on a computer.",false);
+    if(!navigator.mediaDevices||!navigator.mediaDevices.getDisplayMedia)return say("This browser can't capture tab audio. Use Chrome or Edge on a computer, or use Tap BPM.",false);
     try{stream=await navigator.mediaDevices.getDisplayMedia({video:{frameRate:1},audio:{suppressLocalAudioPlayback:true,echoCancellation:false,noiseSuppression:false,autoGainControl:false},systemAudio:'exclude',selfBrowserSurface:'exclude',surfaceSwitching:'exclude'})}
-    catch(e){stream=null;return say('Capture was cancelled. Effects stay off.',false)}
-    if(!stream.getAudioTracks().length){stream.getTracks().forEach(t=>t.stop());stream=null;return say('No sound came through. Pick the Tube Decks tab and switch on "Also share tab audio".',false)}
+    catch(e){stream=null;return say('Sharing was cancelled, so the engine is still off.',false)}
+    if(!stream.getAudioTracks().length){stream.getTracks().forEach(t=>t.stop());stream=null;return say('No sound came through. Choose the Tube Decks tab and switch on "Also share tab audio".',false)}
     ctx=new AudioContext({latencyHint:'interactive'});n={};
     const src=ctx.createMediaStreamSource(stream);
-    try{await ctx.audioWorklet.addModule(URL.createObjectURL(new Blob([code],{type:'text/javascript'})));n.ps=new AudioWorkletNode(ctx,'pshift',{outputChannelCount:[2]})}catch(e){n.ps=null}
+    try{await ctx.audioWorklet.addModule(URL.createObjectURL(new Blob([code],{type:'text/javascript'})));
+      n.ps=new AudioWorkletNode(ctx,'pshift',{outputChannelCount:[2]});n.meter=new AudioWorkletNode(ctx,'meter')}catch(e){n.ps=null;n.meter=null}
     n.hp=new BiquadFilterNode(ctx,{type:'highpass',frequency:10,Q:.7});
     n.lp=new BiquadFilterNode(ctx,{type:'lowpass',frequency:20000,Q:.7});
-    n.ein=new GainNode(ctx,{gain:0});n.dl=new DelayNode(ctx,{maxDelayTime:4,delayTime:.375});
-    n.fb=new GainNode(ctx,{gain:.4});n.wet=new GainNode(ctx,{gain:.5});
+    n.ein=new GainNode(ctx,{gain:0});n.dl=new DelayNode(ctx,{maxDelayTime:4,delayTime:.25});
+    n.fb=new GainNode(ctx,{gain:.45});n.wet=new GainNode(ctx,{gain:.5});
+    if(n.meter){const z=new GainNode(ctx,{gain:0});src.connect(n.meter);n.meter.connect(z);z.connect(ctx.destination)}
     let x=src;if(n.ps){x.connect(n.ps);x=n.ps}
     x.connect(n.hp);n.hp.connect(n.lp);n.lp.connect(ctx.destination);
     n.lp.connect(n.ein);n.ein.connect(n.dl);n.dl.connect(n.fb);n.fb.connect(n.dl);n.dl.connect(n.wet);n.wet.connect(ctx.destination);
     try{FX.set(opener.fxParams())}catch(e){}
     stream.getAudioTracks()[0].onended=()=>{if(stream)stop()};
-    btn.textContent='Stop effects';
-    say(n.ps?'Effects are live. Keep this window open (it can sit behind the mixer).':'Effects are live, but Tune is not available in this browser.',true);
+    btn.textContent='Switch off';
+    say(n.meter?'On. Find BPM and effects are ready. Keep the engine window open (it can sit behind the mixer).':'On, but Find BPM and Tune are not supported in this browser.',true);
   };
-  window.addEventListener('pagehide',()=>{try{opener.fxStatus('Effects window closed. Decks play normally.',false)}catch(e){}});
+  window.addEventListener('pagehide',()=>{try{opener.fxStatus('Engine window closed, so the engine is off.',false)}catch(e){}});
 }
 
-const FXDOC=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Tube Decks effects</title>
+const FXDOC=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Tube Decks audio engine</title>
 <style>body{margin:0;padding:24px;background:#16141b;color:#f1ecf4;font:16px/1.5 system-ui,sans-serif}h1{font-size:24px;margin:0 0 8px}
 button{font:600 16px system-ui;background:#e8c25a;color:#16141b;border:0;border-radius:10px;min-height:48px;padding:0 18px;cursor:pointer}
 ol{padding-left:1.2em;color:#aaa3b4}#st{color:#e8c25a}</style></head><body>
-<h1>Effects window</h1>
+<h1>Audio engine</h1>
 <ol><li>Press the button below.</li><li>In the picker, choose the <b>Tube Decks</b> tab.</li><li>Switch on <b>Also share tab audio</b>, then Share.</li></ol>
-<p><button id="go">Capture the mixer tab</button></p><p id="st">Effects off.</p>
-<p style="color:#aaa3b4;font-size:14px">The mixer tab goes quiet and its sound plays from here, through the effects. Control everything from the mixer.</p>
+<p><button id="go">Switch on: capture the mixer tab</button></p><p id="st">Off.</p>
+<p style="color:#aaa3b4;font-size:14px">Once it's on, the mixer's sound plays from this window so it can go through the effects. Keep this window open and control everything from the mixer.</p>
 <script>(${popupMain})(${JSON.stringify(WORKLET)})<\/script></body></html>`;
 
-$('#fxOpen').onclick=()=>{
-  if(fxWin&&!fxWin.closed){fxWin.focus();return}
-  fxWin=window.open('','tubedecksfx','width=460,height=440');
-  if(!fxWin)return fxStatus('Your browser blocked the effects window. Allow pop-ups for this page, then try again.',false);
+function openEngine(){
+  if(fxWin&&!fxWin.closed){fxWin.focus();return true}
+  fxWin=window.open('','tubedecksfx','width=460,height=460');
+  if(!fxWin)return false;
   fxWin.document.open();fxWin.document.write(FXDOC);fxWin.document.close();
-  fxStatus('Effects window open. Follow the steps in it.',false);
+  fxStatus('Engine window open. Follow the 3 steps in it.',false);
+  return true;
+}
+$('#power').onclick=()=>{
+  if(engineLive()){try{fxWin.document.getElementById('go').click()}catch(e){}return}
+  if(!openEngine())fxStatus('Your browser blocked the engine window. Allow pop-ups for this page, then try again.',false);
 };
-$('#echo').onclick=e=>{fxp.echo=!fxp.echo;e.currentTarget.classList.toggle('on',fxp.echo);pushFx()};
-$$('#divs button').forEach(b=>b.onclick=()=>{fxp.div=+b.dataset.d;$$('#divs button').forEach(x=>x.classList.toggle('on',x===b));pushFx()});
-const bindR=(id,key,show)=>{const el=$('#'+id),o=$('#'+id+'o');const upd=()=>{fxp[key]=+el.value;o.textContent=show(fxp[key]);pushFx()};el.addEventListener('input',upd);upd();return v=>{el.value=v;upd()}};
-bindR('fb','fb',v=>Math.round(v*100)+'%');
-bindR('mix','mix',v=>Math.round(v*100)+'%');
-const setTune=bindR('tune','tune',v=>(v>0?'+':'')+v+' st');
-const setFilt=bindR('filt','filt',v=>Math.abs(v)<.02?'off':v<0?'low-pass '+Math.round(-v*100)+'%':'high-pass '+Math.round(v*100)+'%');
-$('#tup').onclick=()=>setTune(Math.min(12,fxp.tune+1));
-$('#tdn').onclick=()=>setTune(Math.max(-12,fxp.tune-1));
-$('#t0').onclick=()=>setTune(0);
-$('#f0').onclick=()=>setFilt(0);
 
 /* ---------- start ---------- */
 if(location.protocol==='file:'){
   const w=$('#warn');w.hidden=false;
-  w.innerHTML='YouTube won\'t play videos on a page opened straight from your computer. Host this file instead. The quick way is to open a terminal in this folder, run <code>python3 -m http.server</code>, then visit <code>http://localhost:8000/tube-decks.html</code>.';
+  w.innerHTML='YouTube won\'t play videos on a page opened straight from your computer. Host this file, for example on GitHub Pages, or run <code>python3 -m http.server</code> in its folder and open <code>http://localhost:8000/</code>.';
 }
-const n=Math.min(4,Math.max(2,store.get('n')||2));
-for(let k=0;k<n;k++)addDeck();
-master=Math.min(store.get('master')||0,decks.length-1);
-decks.forEach(d=>d.paint());
+for(const k of [0,1]){const d=new Deck(k);decks.push(d);$(k?'#B':'#A').append(d.el)}
 window.onYouTubeIframeAPIReady=()=>{ytReady=true;waiting.splice(0).forEach(f=>f())};
 const api=document.createElement('script');api.src='https://www.youtube.com/iframe_api';
 api.onerror=()=>{const w=$('#warn');w.hidden=false;w.textContent="Couldn't reach YouTube. Check your connection and reload."};
